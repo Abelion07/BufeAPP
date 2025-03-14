@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body {
+            font-family: sans-serif;
+        }
+
+        table {
+            border-collapse: collapse;
+            border: 1px solid black;
+        }
+
+        th {
+            background-color: #aaa;
+        }
+
+        th,
+        td {
+            border: 1px solid black;
+            padding: 5px;
+        }
+
+        tr:nth-child(odd) {
+            background-color: #ddd;
+        }
+
+        .x {
+            position: fixed;
+            top: 10px;
+            right: 20px;
+            font-size: 30px;
+            font-weight: bold;
+            cursor: pointer;
+            color: black;
+        }
+    </style>
+</head>
+
+<body>
+    <a href="../admin.html">
+        <div class="x">&times;</div>
+    </a>
+    <h2>Új termék hozzáadása</h2>
+    <table>
+        <tr>
+            <th>Név</th>
+            <th>Ár</th>
+            <th>Kategória</th>
+            <th>Kép url</th>
+            <th>Hozzáadás</th>
+        </tr>
+        <tr>
+            <td>
+                <input type="text" id="name" placeholder="Termék neve">
+            </td>
+            <td>
+                <input type="number" step="10" min=0 id="price" placeholder="Termék ára">Ft
+            </td>
+            <td>
+                <input type="text" id="category" placeholder="Termék kategóriája">
+            </td>
+            <td>
+                <input type="text" id="pictureurl" placeholder="Termék kép url">
+            </td>
+            <td>
+                <button class="addbtn">Hozzáadás</button>
+            </td>
+        </tr>
+    </table>
+    <h2>Termékek szerkesztése</h2>
+    <table class="termekek">
+        <tr>
+            <th>Név</th>
+            <th>Ár</th>
+            <th>Kategória</th>
+            <th>Kép url</th>
+            <th>Törlés</th>
+        </tr>
+
+    </table>
+
+    <script>
+        fetch('http://localhost:8080')
+            .then(response => response.json())
+            .then(data => {
+                // console.log(data.products)
+                getproducts(data.products);
+            });
+        
+        const termekek = document.querySelector('.termekek')
+        function getproducts(products) {
+            products.forEach(product => {
+                // console.log(product.name);
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                <td>${product.name}</td>
+                <td>${product.price}</td>
+                <td>${product.category}</td>
+                <td>${product.pictureurl}</td>
+                <td><button onclick ='deleteProduct(${product.id})'>Törlés</button></td>
+                `
+                termekek.appendChild(row);
+            });
+        }
+
+        function deleteProduct(productID) {
+            fetch()
+        }
+    </script>
+</body>
+
+</html>

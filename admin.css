@@ -1,0 +1,52 @@
+body{
+    overflow: hidden;
+    font-size: 15px;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.bg{
+    width: 100vw;
+    height: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+.button{
+    border-radius: 10px;
+    width: 30vw;
+    height: 20vh;
+    margin: 2vw;
+    border: none;
+    color: #fff;
+    font-size: 20px;
+    font-weight: bold;
+    cursor: pointer;
+    user-select: none;
+}
+.elso{
+    background-color: #003166;
+}
+.masodik{
+    background-color: #00254d;
+}
+.harmadik{
+    background-color: #001833;
+}
+.logout{
+    position: fixed;
+    top: 1vh;
+    right: 1vh;
+    border-radius: 5px;
+    border: none;
+    background-color: #f00;
+    color: #fff;
+    height: 5vh;
+    width: 15vw;
+    font-weight: bold;
+    font-size: 15px;
+    cursor: pointer;
+    user-select: none;
+}
