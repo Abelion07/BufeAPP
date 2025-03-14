@@ -5,28 +5,46 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link rel="stylesheet" href="root.css">
     <style>
-        body {
+        body,
+        .bg {
             font-family: sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
         }
 
         table {
             border-collapse: collapse;
-            border: 1px solid black;
-        }
-
-        th {
-            background-color: #aaa;
+            width: 80%;
+            margin: 20px 0;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
 
         th,
         td {
-            border: 1px solid black;
-            padding: 5px;
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: center;
+
+        }
+
+        th {
+            background-color: var(--button-primary-color);
+            color: white;
         }
 
         tr:nth-child(odd) {
-            background-color: #ddd;
+            background-color: #f9f9f9;
+        }
+
+        tr:hover {
+            background-color: #f1f1f1;
         }
 
         .x {
@@ -38,6 +56,43 @@
             cursor: pointer;
             color: black;
         }
+
+        .addbtn,
+        button {
+            background-color: var(--button-secondary-color);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        .addbtn:hover,
+        button {
+            background-color: var(--button-secondary-color);
+        }
+
+        input[type="text"],
+        input[type="number"] {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        h2 {
+            color: #003166;
+        }
+
+        button {
+            cursor: pointer;
+        }
+
+        button:hover {
+            opacity: 0.8;
+        }
     </style>
 </head>
 
@@ -45,53 +100,69 @@
     <a href="../admin.html">
         <div class="x">&times;</div>
     </a>
-    <h2>Új termék hozzáadása</h2>
-    <table>
-        <tr>
-            <th>Név</th>
-            <th>Ár</th>
-            <th>Kategória</th>
-            <th>Kép url</th>
-            <th>Hozzáadás</th>
-        </tr>
-        <tr>
-            <td>
-                <input type="text" id="name" placeholder="Termék neve">
-            </td>
-            <td>
-                <input type="number" step="10" min=0 id="price" placeholder="Termék ára">Ft
-            </td>
-            <td>
-                <input type="text" id="category" placeholder="Termék kategóriája">
-            </td>
-            <td>
-                <input type="text" id="pictureurl" placeholder="Termék kép url">
-            </td>
-            <td>
-                <button class="addbtn">Hozzáadás</button>
-            </td>
-        </tr>
-    </table>
-    <h2>Termékek szerkesztése</h2>
-    <table class="termekek">
-        <tr>
-            <th>Név</th>
-            <th>Ár</th>
-            <th>Kategória</th>
-            <th>Kép url</th>
-            <th>Törlés</th>
-        </tr>
+    <div class="bg">
+        <h2>Új termék hozzáadása</h2>
+        <table>
+            <tr>
+                <th>Név</th>
+                <th>Ár</th>
+                <th>Kategória</th>
+                <th>Kép url</th>
+                <th>Hozzáadás</th>
+            </tr>
+            <tr>
+                <td>
+                    <input autocomplete="off" type="text" id="name" placeholder="Termék neve">
+                </td>
+                <td>
+                    <input type="number" step="10" min=0 id="price" placeholder="Termék ára">
+                </td>
+                <td>
+                    <input autocomplete="off" type="text" id="category" placeholder=" Kategóriája">
+                </td>
+                <td>
+                    <input autocomplete="off" type="text" id="pictureurl" placeholder="Termék kép url">
+                </td>
+                <td>
+                    <button class="addbtn">Hozzáadás</button>
+                </td>
+            </tr>
+        </table>
+        <h2>Termékek szerkesztése</h2>
+        <table class="termekek">
+            <tr>
+                <th>Név</th>
+                <th>Ár</th>
+                <th>Kategória</th>
+                <th>Kép url</th>
+                <th>Törlés</th>
+            </tr>
 
-    </table>
+        </table>
+    </div>
 
     <script>
-        fetch('http://localhost:8080')
+        const addbtn = document.querySelector('.addbtn')
+        addbtn.addEventListener('click', () => {
+            const productname = document.getElementById("name").value.trim();
+            const productprice = parseFloat(document.getElementById("price").value);
+            const productcategory = document.getElementById("category").value.trim();
+            const producturl = document.getElementById("pictureurl").value.trim();
+
+            if (!productname || !productcategory || !producturl || isNaN(productprice) || productprice <= 0) {
+                alert("Kérlek, töltsd ki helyesen az összes mezőt, és érvényes árat adj meg!");
+                return;
+            }
+
+            addProduct(productname, productprice, productcategory, producturl);
+        })
+
+        fetch('http://localhost:8080/products')
             .then(response => response.json())
             .then(data => {
-                // console.log(data.products)
-                getproducts(data.products);
-            });
-        
+                getproducts(data);
+            })
+
         const termekek = document.querySelector('.termekek')
         function getproducts(products) {
             products.forEach(product => {
@@ -108,8 +179,47 @@
             });
         }
 
+        function addProduct(name, price, category, pictureurl) {
+            fetch("http://localhost:8080/products", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    name: name,
+                    price: price,
+                    category: category,
+                    pictureurl: pictureurl
+                })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) {
+                        alert("Hiba történt a hozzáadás során: " + data.error);
+                    } else {
+                        alert('Termék hozzáadva!');
+                        location.reload();
+                    }
+                })
+                .catch(error => console.error('Hiba:', error));
+        }
+
         function deleteProduct(productID) {
-            fetch()
+            if (confirm("Biztosan törölni szeretnéd?")) {
+                fetch(`http://localhost:8080/products/${productID}`, {
+                    method: 'DELETE'
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.error) {
+                            alert("Hiba történt a törlés során: " + data.error);
+                        } else {
+                            alert('Termék törölve!');
+                            location.reload();
+                        }
+                    })
+                    .catch(error => console.error('Hiba:', error));
+            }
         }
     </script>
 </body>

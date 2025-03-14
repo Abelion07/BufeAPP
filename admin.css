@@ -27,13 +27,13 @@ body{
     user-select: none;
 }
 .elso{
-    background-color: #003166;
+    background-color: var(--button-primary-color);
 }
 .masodik{
-    background-color: #00254d;
+    background-color: var(--button-secondary-color);
 }
 .harmadik{
-    background-color: #001833;
+    background-color: var(--button-thirth-color);
 }
 .logout{
     position: fixed;
@@ -41,7 +41,7 @@ body{
     right: 1vh;
     border-radius: 5px;
     border: none;
-    background-color: #f00;
+    background-color: var(--button-fourth-color);
     color: #fff;
     height: 5vh;
     width: 15vw;

@@ -1,53 +1,100 @@
-var http = require('http');
-var mysql = require('mysql');
+const express = require("express");
+const mysql = require("mysql");
 
-var connection = mysql.createConnection({
-    host     : '127.0.0.1',
-    user     : 'root',
-    password : '',
-    database : 'bufeDB'
+const app = express();
+const port = 8080;
+
+const connection = mysql.createConnection({
+  host: "127.0.0.1",
+  user: "root",
+  password: "",
+  database: "bufeDB",
 });
 
 connection.connect();
 
-function getDatabaseData() {
-    let queries = [
-        'SELECT * FROM products ORDER BY name ASC',
-        'SELECT * FROM orders',
-        'SELECT * FROM customers'
-    ];
+app.use(express.json());
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept"
+  );
+  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS"); // ← Itt engedélyezzük a DELETE metódust
+  next();
+});
 
-    let promises = queries.map(query => {
-        return new Promise((resolve, reject) => {
-            connection.query(query, (error, results) => {
-                if (error) reject(error);
-                resolve(results);
-            });
-        });
-    });
+app.options("*", (req, res) => {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+  res.sendStatus(200);
+});
 
-    return Promise.all(promises).then(results => {
-        return {
-            products: results[0],
-            orders: results[1],
-            customers: results[2]
-        };
-    });
-}
+//Default
+app.get("/", (req, res) => {
+  res.send("Welcome on my server!");
+});
 
-http.createServer(async function (req, res) {
-    res.writeHead(200, {
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*' 
-    });
-    try {
-        let data = await getDatabaseData(); // Meghívja a függvényt és lekéri az adatokat
-        res.write(JSON.stringify(data));
-    } catch (error) {
-        res.write(JSON.stringify({ error: error.message }));
+// Külön végpontok
+app.get("/products", (req, res) => {
+  connection.query(
+    "SELECT * FROM products ORDER BY name ASC",
+    (error, results) => {
+      if (error) {
+        res.status(500).json({ error: error.message });
+      } else {
+        res.json(results);
+      }
     }
-    res.end();
-}).listen(8080, () => {
-    console.log("Server running at http://localhost:8080");
-    
+  );
+});
+
+app.get("/orders", (req, res) => {
+  connection.query("SELECT * FROM orders", (error, results) => {
+    if (error) {
+      res.status(500).json({ error: error.message });
+    } else {
+      res.json(results);
+    }
+  });
+});
+
+app.get("/users", (req, res) => {
+  connection.query("SELECT * FROM users", (error, results) => {
+    if (error) {
+      res.status(500).json({ error: error.message });
+    } else {
+      res.json(results);
+    }
+  });
+});
+
+app.post("/products", (req, res) => {
+    const { name, price, category, pictureurl } = req.body;
+    const sql = "INSERT INTO products (name, price, category, pictureurl) VALUES (?, ?, ?, ?)";
+    connection.query(sql, [name, parseInt(price), category, pictureurl], (error, result) => {
+      if (error) {
+        console.error("Hiba a hozzáadás során:", error);
+        res.status(500).json({ error: "Hiba történt" });
+      } else {
+        res.json({ message: "Termék hozzáadva!", productId: result.insertId });
+      }
+    });
+  });
+
+app.delete("/products/:id", (req, res) => {
+  const productID = req.params.id;
+  const sql = "DELETE FROM products WHERE id = ?";
+  connection.query(sql, [productID], (error, result) => {
+    if (error) {
+      console.error("Hiba a törlés során:", error);
+      res.status(500).json({ error: "Hiba történt" });
+    } else {
+      res.json({ message: "Termék törölve!", deletedId: productID });
+    }
+  });
+});
+
+app.listen(port, () => {
+  console.log(`Server running at http://localhost:${port}`);
 });

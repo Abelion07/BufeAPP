@@ -2,11 +2,10 @@ const termekek_lista = document.querySelector('.termekek-lista');
 const kosarbtn = document.querySelector('.kosarbtn');
 const kosarWindow = document.querySelector('.kosarban')
 
-fetch('http://localhost:8080')
+fetch('http://localhost:8080/products')
 .then(response => response.json())
 .then(data => {
-    console.log(data[0])
-    termekKiiras(data.products);
+    termekKiiras(data);
 })
 
 function termekKiiras(csomag) {
