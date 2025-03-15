@@ -6,11 +6,11 @@ const categoryList = document.querySelector(".category-list");
 fetch("http://localhost:8080/products")
   .then((response) => response.json())
   .then((data) => {
-    termekKiiras(data, "gyümölcs"); //Default
+    termekKiiras(data, "Gyümölcs"); //Default
     createCategoryList(data);
   });
 
-function termekKiiras(csomag, selectedCategory = "gyümölcs") {
+function termekKiiras(csomag, selectedCategory = "Gyümölcs") {
   termekek_lista.innerHTML = "";
   const categories = {};
 

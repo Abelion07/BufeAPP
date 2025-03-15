@@ -50,7 +50,7 @@ app.get("/products", (req, res) => {
 });
 
 app.get("/orders", (req, res) => {
-  connection.query("SELECT * FROM orders", (error, results) => {
+  connection.query("SELECT megrendelesek.*, products.price FROM megrendelesek JOIN products on megrendelesek.termekneve = products.name", (error, results) => {
     if (error) {
       res.status(500).json({ error: error.message });
     } else {
@@ -94,6 +94,19 @@ app.delete("/products/:id", (req, res) => {
     }
   });
 });
+
+app.post("/oders/:id", (req, res) => {
+  const productID = req.params.id;
+  const sql = "UPDATE megrendelesek SET Kész = 1 WHERE id = ?";
+  connection.query(sql, [productID], (error, result) => {
+    if (error) {
+      console.error("Hiba a törlés során:", error);
+      res.status(500).json({ error: "Hiba történt" });
+    } else {
+      res.json({ message: "Termék törölve!", deletedId: productID });
+    }
+  })
+})
 
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);
