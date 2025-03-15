@@ -1,15 +1,15 @@
-fetch('http://localhost:8080/orders')
-.then(response => response.json())
-.then(data => {
+fetch("http://localhost:8080/orders")
+  .then((response) => response.json())
+  .then((data) => {
     tablazatFeltoltes(data);
-})
+  });
 
 function tablazatFeltoltes(data) {
-    data.forEach(element => {
-        const tablazat = document.querySelector('.tablazat');
+  data.forEach((element) => {
+    const tablazat = document.querySelector(".tablazat");
 
-        const row = document.createElement('tr');
-        row.innerHTML=`
+    const row = document.createElement("tr");
+    row.innerHTML = `
             <td>${element.id}</td>
             <td>${element.megrendelo}</td>
             <td>${element.email}</td>
@@ -20,9 +20,30 @@ function tablazatFeltoltes(data) {
             <td>${element.db}</td>
             <td>${element.price}</td>
             <td>${element.Kész}</td>
-            <td><button>Leadás</button></td>
-        `
+            <td><button onclick="leadas(${element.id})">Leadás</button></td>
+        `;
+    tablazat.appendChild(row);
+  });
+}
 
-        tablazat.appendChild(row);
-    });
+function leadas(orderID) {
+  if (confirm("Biztosan le szeretnéd adni a megrendelést?")) {
+    fetch(`http://localhost:8080/orders/${orderID}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ orderID: orderID }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.error) {
+          alert("Hiba történt a frissítés során: " + data.error);
+        } else {
+          alert("Megrendelés frissítve!");
+          location.reload();
+        }
+      })
+      .catch((error) => console.error("Hiba:", error));
+  }
 }
