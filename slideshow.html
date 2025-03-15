@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .bg {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: auto;
+            width: 100%;
+        }
+
+        .termek {
+            width: 20vw;
+            height: 40vh;
+            align-items: center;
+            justify-content: center;
+            display: flex;
+            border: 1px solid black;
+            margin: 20px;
+        }
+
+        .hidden {
+            transition: 0.2s all ease;
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="bg">
+        <button class="prev">bal</button>
+        <div class="termek">alma</div>
+        <div class="termek">körte</div>
+        <div class="termek">szilva</div>
+        <div class="termek">narancs</div>
+        <button class="next">jobb</button>
+    </div>
+
+    <script>
+        const boxes = document.querySelectorAll('.termek');
+        let currentIndex = 0;
+
+        function updateVisibility() {
+            boxes.forEach((element, index) => {
+                if (index === currentIndex || index === currentIndex + 1) {
+                    element.classList.remove('hidden');
+                } else {
+                    element.classList.add('hidden');
+                }
+            });
+        }
+
+        const prev = document.querySelector('.prev');
+        const next = document.querySelector('.next');
+
+        next.addEventListener('click', () => {
+            currentIndex = (currentIndex + 2) % boxes.length;
+            updateVisibility();
+        });
+
+        prev.addEventListener('click', () => {
+            currentIndex = (currentIndex - 2 + boxes.length) % boxes.length;
+            updateVisibility();
+        });
+
+        // Kezdeti láthatóság beállítása
+        updateVisibility();
+    </script>
+</body>
+
+</html>

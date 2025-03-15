@@ -38,7 +38,7 @@ app.get("/", (req, res) => {
 // Külön végpontok
 app.get("/products", (req, res) => {
   connection.query(
-    "SELECT * FROM products ORDER BY name ASC",
+    "SELECT * FROM products ORDER BY category, name ASC",
     (error, results) => {
       if (error) {
         res.status(500).json({ error: error.message });
