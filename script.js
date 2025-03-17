@@ -36,6 +36,9 @@ function termekKiiras(csomag, selectedCategory = "Gyümölcs") {
       kosarba_btn.innerText = "Kosárba";
       kosarba_btn.classList.add("kosárba-btn");
       kosarba_btn.setAttribute("data-id", item.id);
+      kosarba_btn.addEventListener('click', () => {
+        addtocart(item);
+      })
 
       termek.appendChild(kosarba_btn);
       categoryDiv.appendChild(termek);

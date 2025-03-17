@@ -5,23 +5,37 @@ fetch("http://localhost:8080/orders")
   });
 
 function tablazatFeltoltes(data) {
-  data.forEach((element) => {
-    const tablazat = document.querySelector(".tablazat");
+  const tablazat = document.querySelector(".tablazat");
+  const processedIds = new Set(); // Set a feldolgozott id-k nyomon követésére
 
+  data.forEach((element) => {
     const row = document.createElement("tr");
     row.innerHTML = `
             <td>${element.id}</td>
             <td>${element.megrendelo}</td>
             <td>${element.email}</td>
-            <td>${element.termekneve}</td>
-            <td>${element.create_time}</td>
-            <td>${element.szunet}</td>
-            <td>${element.kp}</td>
-            <td>${element.db}</td>
-            <td>${element.price}</td>
-            <td>${element.Kész}</td>
-            <td><button onclick="leadas(${element.id})">Leadás</button></td>
+            <td>${element.leadas_idopont}</td>
+            <td>${element.szunet}.</td>
+            <td>${element.name}</td>
+            <td>${element.quantity} db</td>
+            <td>${element.total_price}</td>
+            <td>${element.fizetes}</td>
         `;
+
+    if (!processedIds.has(element.id)) {
+      const buttonCell = document.createElement("td");
+      const button = document.createElement("button");
+      button.innerText = "Leadás";
+      button.onclick = () => leadas(element.id);
+      buttonCell.appendChild(button);
+      row.appendChild(buttonCell);
+
+      processedIds.add(element.id);
+    } else {
+      const emptyCell = document.createElement("td");
+      row.appendChild(emptyCell);
+    }
+
     tablazat.appendChild(row);
   });
 }
