@@ -11,7 +11,6 @@ function tablazatFeltoltes(data) {
   data.forEach((element) => {
     const row = document.createElement("tr");
     row.innerHTML = `
-            <td>${element.id}</td>
             <td>${element.megrendelo}</td>
             <td>${element.email}</td>
             <td>${element.leadas_idopont}</td>

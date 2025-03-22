@@ -1,0 +1,62 @@
+body{
+    background: url(/pics/wallpaper.jpg);
+    background-size: cover;
+    overflow: hidden;
+    height: 100vh;
+    background-repeat: no-repeat;
+    background-position: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-clip: content-box;
+}
+
+.login-container{
+    background-color: rgba(255, 255, 255, 0.5);
+    box-shadow: 0 0 10px #999;
+    width: 40vw;
+    height: 70vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    border-radius: 15px;
+    border: none;
+}
+
+input{
+    margin: 20px;
+    width: 70%;
+    padding: 20px;
+    border-radius: 15px;
+    border: none;
+}
+
+button{
+    padding: 20px;
+    border: none;
+    border-radius: 15px;
+    background-color: var(--button-primary-color);
+    color: white;
+    width: 50%;
+}
+
+button:hover{
+    background-color: var(--button-third-color);
+}
+
+.x {
+    position: fixed;
+    top: 10px;
+    right: 20px;
+    font-size: 30px;
+    font-weight: bold;
+    cursor: pointer;
+    color: white;
+}
+
+@media (max-width: 500px) {
+    .login-container{
+        width: 80vw;
+    }
+}

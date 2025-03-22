@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bejelentkezés</title>
+    <link rel="stylesheet" href="css/root.css">
+    <link rel="stylesheet" href="css/login.css">
+</head>
+
+<body>
+    <div class="login-container">
+        <a href="index.html"><div class="x">&times;</div></a>
+        <h2>Bejelentkezés</h2>
+        <input type="text" id="username" placeholder="Username">
+        <input type="password" id="pw" placeholder="Password">
+        <button class="loginbtn">Belépés</button>
+    </div>
+
+    <script>
+        const bejelentkezés = document.querySelector('.loginbtn');
+        bejelentkezés.addEventListener('click', () => {
+            let username = document.getElementById('username').value
+            let password = document.getElementById('pw').value;
+            fetch('http://localhost:8080/login', {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    username: username,
+                    password: password
+                })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        window.location.href = 'admin.html';
+                    } else {
+                        alert('Hibás felhasználónév vagy jelszó');
+                    }
+                })
+                .catch(error => console.error('Hiba:', error));
+        })
+    </script>
+</body>
+
+</html>

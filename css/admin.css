@@ -33,7 +33,7 @@ body{
     background-color: var(--button-secondary-color);
 }
 .harmadik{
-    background-color: var(--button-thirth-color);
+    background-color: var(--button-third-color);
 }
 .logout{
     position: fixed;
@@ -49,4 +49,14 @@ body{
     font-size: 15px;
     cursor: pointer;
     user-select: none;
+}
+
+@media (max-width: 500px){
+    .elso, .masodik, .harmadik{
+        width: 80vw;
+    }
+
+    .logout{
+        width: 30vw;
+    }
 }

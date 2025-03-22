@@ -1,5 +1,6 @@
 const express = require("express");
 const mysql = require("mysql");
+const bcrypt = require("bcryptjs");
 
 const app = express();
 const port = 8080;
@@ -20,7 +21,7 @@ app.use((req, res, next) => {
     "Access-Control-Allow-Headers",
     "Origin, X-Requested-With, Content-Type, Accept"
   );
-  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS"); // ← Itt engedélyezzük a DELETE metódust
+  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
   next();
 });
 
@@ -30,7 +31,7 @@ app.options("*", (req, res) => {
   res.sendStatus(200);
 });
 
-//Default
+// Default
 app.get("/", (req, res) => {
   res.send("Welcome on my server!");
 });
@@ -75,7 +76,7 @@ app.get("/orders", (req, res) => {
   );
 });
 
-//Termék hozzáadása
+// Termék hozzáadása
 app.post("/products", (req, res) => {
   const { name, price, category, pictureurl } = req.body;
   const sql =
@@ -94,6 +95,7 @@ app.post("/products", (req, res) => {
   );
 });
 
+// Termék törlése
 app.delete("/products/:id", (req, res) => {
   const productID = req.params.id;
   const sql = "DELETE FROM products WHERE id = ?";
@@ -107,21 +109,7 @@ app.delete("/products/:id", (req, res) => {
   });
 });
 
-//Termék törlése
-app.post("/orders/:id", (req, res) => {
-  const productID = req.params.productID;
-  const sql = "UPDATE megrendelesek SET Kész = 1 WHERE id = ?";
-  connection.query(sql, [productID], (error, result) => {
-    if (error) {
-      console.error("Hiba a törlés során:", error);
-      res.status(500).json({ error: "Hiba történt" });
-    } else {
-      res.json({ message: "Termék törölve!", deletedId: productID });
-    }
-  });
-});
-
-//Megrendelés törlése
+// Megrendelés leadása
 app.put("/orders/:id", (req, res) => {
   const orderID = req.params.id;
   const sql = "UPDATE megrendelesek SET Kesz = 1 WHERE id = ?";
@@ -138,8 +126,6 @@ app.put("/orders/:id", (req, res) => {
 // Rendelés hozzáadása
 app.post("/addOrders", (req, res) => {
   const { nev, email, szunet, fizetes, cart } = req.body;
-
-  // Először beszúrjuk a rendelés adatait a megrendelesek táblába
   const sqlOrder =
     "INSERT INTO megrendelesek (megrendelo, email, szunet, fizetes) VALUES (?, ?, ?, ?)";
   connection.query(sqlOrder, [nev, email, szunet, fizetes], (error, result) => {
@@ -159,15 +145,87 @@ app.post("/addOrders", (req, res) => {
       connection.query(sqlOrderItems, [orderItems], (error, result) => {
         if (error) {
           console.error("Hiba a rendelés tételeinek beszúrása során:", error);
-          res
-            .status(500)
-            .json({
-              error: "Hiba történt a rendelés tételeinek beszúrása során",
-            });
+          res.status(500).json({
+            error: "Hiba történt a rendelés tételeinek beszúrása során",
+          });
         } else {
           res.json({ message: "Rendelés sikeresen leadva!" });
         }
       });
+    }
+  });
+});
+
+// Bejelentkezés
+app.post("/login", (req, res) => {
+  const { username, password } = req.body;
+
+  const sql = "SELECT * FROM felhasznalok WHERE username = ?";
+  connection.query(sql, [username], (error, results) => {
+    if (error) {
+      console.error("Hiba a bejelentkezés során:", error);
+      return res.status(500).json({ error: "Szerverhiba" });
+    }
+
+    if (results.length === 0) {
+      return res
+        .status(401)
+        .json({ success: false, message: "Hibás felhasználónév vagy jelszó" });
+    }
+
+    const foundUser = results[0];
+
+    if (password === foundUser.pw) {
+      // Csak sima string-összehasonlítás
+      return res.json({ success: true });
+    } else {
+      return res
+        .status(401)
+        .json({ success: false, message: "Hibás felhasználónév vagy jelszó" });
+    }
+  });
+});
+
+app.get("/felhasznaloklekeres", (req, res) => {
+  connection.query(
+    "SELECT * FROM felhasznalok",
+    (error, results) => {
+      if (error) {
+        res.status(500).json({ error: error.message });
+      } else {
+        res.json(results);
+      }
+    }
+  );
+});
+
+app.post("/addUser", (req, res) => {
+  const { username, pw } = req.body;
+  const sql =
+    "INSERT INTO felhasznalok (username, pw) VALUES (?, ?)";
+  connection.query(
+    sql,
+    [username, pw],
+    (error, result) => {
+      if (error) {
+        console.error("Hiba a hozzáadás során:", error);
+        res.status(500).json({ error: "Hiba történt" });
+      } else {
+        res.json({ message: "Felhasználó hozzáadva!", productId: result.insertId });
+      }
+    }
+  );
+});
+
+app.delete("/users/:id", (req, res) => {
+  const productID = req.params.id;
+  const sql = "DELETE FROM felhasznalok WHERE id = ?";
+  connection.query(sql, [productID], (error, result) => {
+    if (error) {
+      console.error("Hiba a törlés során:", error);
+      res.status(500).json({ error: "Hiba történt" });
+    } else {
+      res.json({ message: "Felhasználó törölve!", deletedId: productID });
     }
   });
 });

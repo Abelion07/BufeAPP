@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Felhaszálók</title>
+    <link rel="stylesheet" href="css/root.css">
+    <link rel="stylesheet" href="css/orders.css">
+</head>
+<body>
+    <a href="admin.html" class="x">
+        &times;
+    </a>
+    <div class="bg">
+        <h2>Felhaszálók</h2>
+        <h3>Felhasználó hozzáadása</h3>
+        <table class="hozzáadás">
+            <tr>
+                <th>Felhaszálónév</th>
+                <th>Jelszó</th>
+                <th>Hozzáadás</th>
+            </tr>
+            <tr>
+                <td><input id="username" type="text" placeholder="Felhasználónév"></td>
+                <td><input id="pw" type="text" placeholder="Jelszó"></td>
+                <td><button class="addbtn">Hozzáadás</button></td>
+            </tr>
+        </table>
+        <h3>Felhasználók</h3>
+        <table class="adatok">
+            <tr>
+                <th>ID</th>
+                <th>Felhaszálónév</th>
+                <th>Jelszó</th>
+                <th>Törlés</th>
+            </tr>
+        </table>
+    </div>
+    <script src="scripts/users.js"></script>
+</body>
+</html>
