@@ -6,10 +6,11 @@ const app = express();
 const port = 8080;
 
 const connection = mysql.createConnection({
-  host: "127.0.0.1",
-  user: "root",
-  password: "",
-  database: "bufeDB",
+  host: "sql7.freesqldatabase.com",
+  user: "sql7769011",
+  password: "ZKPtyqQVpu",
+  database: "sql7769011",
+  port: 3306
 });
 
 connection.connect();
