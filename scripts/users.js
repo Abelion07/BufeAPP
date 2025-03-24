@@ -1,6 +1,6 @@
 const adatok = document.querySelector(".adatok");
 
-fetch("http://localhost:8080/felhasznaloklekeres")
+fetch("https://bufeapp.onrender.com/felhasznaloklekeres")
   .then((response) => response.json())
   .then((data) => {
     feltoltes(data);
@@ -25,7 +25,7 @@ addbtn.addEventListener("click", () => {
   let username = document.getElementById("username").value;
   let pw = document.getElementById("pw").value;
   if (username != "" && pw != "") {
-    fetch("http://localhost:8080/addUser", {
+    fetch("https://bufeapp.onrender.com/addUser", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -48,7 +48,7 @@ addbtn.addEventListener("click", () => {
 
 function removeUser(userid) {
   if (confirm("Biztosan törölni szeretnéd?")) {
-    fetch(`http://localhost:8080/users/${userid}`, {
+    fetch(`https://bufeapp.onrender.com/users/${userid}`, {
       method: "DELETE",
     })
       .then((response) => response.json())

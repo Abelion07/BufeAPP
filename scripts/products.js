@@ -13,7 +13,7 @@ const addbtn = document.querySelector('.addbtn')
             addProduct(productname, productprice, productcategory, producturl);
         })
 
-        fetch('http://localhost:8080/products')
+        fetch('https://bufeapp.onrender.com/products')
             .then(response => response.json())
             .then(data => {
                 getproducts(data);
@@ -36,7 +36,7 @@ const addbtn = document.querySelector('.addbtn')
         }
 
         function addProduct(name, price, category, pictureurl) {
-            fetch("http://localhost:8080/products", {
+            fetch("https://bufeapp.onrender.com/products", {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -62,7 +62,7 @@ const addbtn = document.querySelector('.addbtn')
 
         function deleteProduct(productID) {
             if (confirm("Biztosan törölni szeretnéd?")) {
-                fetch(`http://localhost:8080/products/${productID}`, {
+                fetch(`https://bufeapp.onrender.com/products/${productID}`, {
                     method: 'DELETE'
                 })
                     .then(response => response.json())

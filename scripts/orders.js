@@ -1,4 +1,4 @@
-fetch("http://localhost:8080/orders")
+fetch("https://bufeapp.onrender.com/orders")
   .then((response) => response.json())
   .then((data) => {
     tablazatFeltoltes(data);
@@ -41,7 +41,7 @@ function tablazatFeltoltes(data) {
 
 function leadas(orderID) {
   if (confirm("Biztosan le szeretnéd adni a megrendelést?")) {
-    fetch(`http://localhost:8080/orders/${orderID}`, {
+    fetch(`https://bufeapp.onrender.com/orders/${orderID}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",

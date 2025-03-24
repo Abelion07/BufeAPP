@@ -3,7 +3,7 @@ const kosarbtn = document.querySelector(".kosarbtn");
 const kosarWindow = document.querySelector(".kosarban");
 const categoryList = document.querySelector(".category-list");
 
-fetch("http://localhost:8080/products")
+fetch("https://bufeapp.onrender.com/products")
   .then((response) => response.json())
   .then((data) => {
     termekKiiras(data, "Gyümölcs"); //Default

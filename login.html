@@ -23,7 +23,7 @@
         bejelentkezés.addEventListener('click', () => {
             let username = document.getElementById('username').value
             let password = document.getElementById('pw').value;
-            fetch('http://localhost:8080/login', {
+            fetch('https://bufeapp.onrender.com/login', {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

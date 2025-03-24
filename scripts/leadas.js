@@ -19,7 +19,7 @@ elkuld.addEventListener("click", () => {
     cart,
   };
 
-  fetch("http://localhost:8080/addOrders", {
+  fetch("https://bufeapp.onrender.com/addOrders", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
